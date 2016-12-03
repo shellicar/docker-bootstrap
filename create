@@ -2,9 +2,25 @@
 
 . env
 
-docker rm -f ${NAME}
-docker run -d --name ${NAME} -it \
--v ${NAME}-home:/home \
+
+STATE=$(docker inspect --format "{{.State.Running}}" "$NAME" 2>/dev/null)
+
+if [ "$STATE" == "false" ]; then
+    printf "Removing: " && docker rm $NAME || exit 1
+elif [ "$STATE" == "true" ]; then
+    printf "Stopping: " && docker stop $NAME || exit 2
+    printf "Removing: " && docker rm $NAME || exit 3
+fi
+
+docker run -d -it \
+--name ${NAME} \
+-h alpine-dev \
 -p 222:22 \
-${TAG}
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /etc/passwd:/etc/passwd:ro \
+-v /etc/shadow:/etc/shadow:ro \
+-v /etc/group:/etc/group:ro \
+-v /etc/sudoers:/etc/sudoers:ro \
+-v dev-home:/home:rw \
+${TAG} || exit 4
 

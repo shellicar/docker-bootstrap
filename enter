@@ -1,2 +1,3 @@
 #!/bin/sh
-docker exec -it dev login -f root
+. env
+docker exec -it alpine-dev login -f `whoami`

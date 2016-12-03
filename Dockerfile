@@ -8,24 +8,34 @@ ENV VERSION=v1.18.1.5 \
 RUN apk add --no-cache curl \
 &&  curl -sSL ${URL} > /tmp/down.tar.gz \
 &&  tar xfz /tmp/down.tar.gz -C / \
-&&  apk del -r curl \
+&&  apk del -r curl
+
 # add packages
-&&  apk add openssh docker py-pip bash sudo --no-cache
+RUN apk add openssh docker py-pip bash sudo --no-cache
+
+RUN apk add tzdata --no-cache \
+&&  cp /usr/share/zoneinfo/Australia/Melbourne /etc/localtime \
+&&  apk del -r tzdata
 
 # gen keys
-RUN ssh-keygen -A \
-&&  rm -rf /tmp/*
+RUN ssh-keygen -A
+
+RUN apk add python --no-cache \
+&&  pip install --upgrade pip \
+&&  pip install docker-compose
+
 
 ADD ./services.d /etc/services.d
-ADD ./docker-enter /usr/local/bin
-ADD ./authorized_keys /root/.ssh/
+ADD ./bin/docker-enter /usr/local/bin
 
-RUN chmod 700 /root/.ssh \
-&&  chmod 600 /root/.ssh/authorized_keys \
-&&  chown -R root:root /root/.ssh
+
+VOLUME /home
+
 
 EXPOSE 22
 
 ENTRYPOINT ["/init"]
 CMD []
+
+RUN rm -rf /tmp/*
 
