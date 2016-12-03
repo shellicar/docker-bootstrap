@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. env
+
+docker rm -f ${NAME}
+docker run -d --name ${NAME} -it \
+-v ${NAME}-home:/home \
+-p 222:22 \
+${TAG}
+
