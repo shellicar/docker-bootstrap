@@ -13,7 +13,7 @@ RUN apk add --no-cache curl \
 &&  apk del -r curl
 
 # add packages
-RUN apk add openssh docker bash sudo vim --no-cache
+RUN apk add openssh docker bash sudo vim openssl --no-cache
 
 RUN apk add tzdata --no-cache \
 &&  cp /usr/share/zoneinfo/Australia/Melbourne /etc/localtime \

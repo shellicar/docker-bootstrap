@@ -39,7 +39,3 @@ while read f; do
 	fi
 done < ./tmp/myshadow
 
-
-
-
-
