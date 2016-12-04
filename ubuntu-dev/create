@@ -13,14 +13,11 @@ elif [ "$STATE" == "true" ]; then
 fi
 
 docker run -d -it \
+-e TZ=Australia/Melbourne \
 --name ${NAME} \
--h alpine-dev \
--p 222:22 \
+-h ${NAME} \
+-p 223:22 \
 -v /var/run/docker.sock:/var/run/docker.sock \
--v /etc/passwd:/etc/passwd:ro \
--v /etc/shadow:/etc/shadow:ro \
--v /etc/group:/etc/group:ro \
--v /etc/sudoers:/etc/sudoers:ro \
--v dev-home:/home:rw \
+-v ${NAME}-home:/home:rw \
 ${TAG} || exit 4
 

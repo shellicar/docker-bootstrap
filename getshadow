@@ -1,0 +1,45 @@
+#!/bin/sh
+
+if [ "`id -u`" != "0" ]; then
+   sudo $0
+    exit 0
+fi
+
+mkdir ./tmp/
+
+USER_REGEX="[a-z_][a-z0-9_-]*"
+PASS_REGEX="^\(${USER_REGEX}:\$6\$[^:]*\):.*$"
+
+
+
+
+
+echo "Makeshadow: USER=$USER MYUSER=$MYUSER ID=`id -u`"
+
+grep "${PASS_REGEX}" /etc/shadow | sed "s;${PASS_REGEX};\1;g" > ./tmp/myshadow
+
+
+. /etc/os-release
+
+if [ "$NAME" == "Alpine Linux" ]; then
+	TESTGROUP=wheel
+elif [ "$NAME" == "Ubuntu" ]; then
+	TESTGROUP=admin
+else
+	echo "Unhandled linux release: $NAME"
+	exit 1
+fi
+
+while read f; do
+	MYUSER=`echo $f | cut -f1 -d':'`
+	
+	if groups $MYUSER | grep -w $TESTGROUP; then
+		echo "Admin: $MYUSER"
+		echo "$MYUSER" >> ./tmp/admins
+	fi
+done < ./tmp/myshadow
+
+
+
+
+

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+. env
+
+
+STATE=$(docker inspect --format "{{.State.Running}}" "$NAME" 2>/dev/null)
+
+if [ "$STATE" == "false" ]; then
+    printf "Removing: " && docker rm $NAME || exit 1
+elif [ "$STATE" == "true" ]; then
+    printf "Stopping: " && docker stop $NAME || exit 2
+    printf "Removing: " && docker rm $NAME || exit 3
+fi
+
+docker run -d -it \
+--name ${NAME} \
+-h ${NAME} \
+-p 222:22 \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v ${NAME}-home:/home:rw \
+${TAG} || exit 4
+

@@ -1,3 +1,12 @@
 #!/bin/sh
 . env
-docker exec -it alpine-dev login -f `whoami`
+
+ARGS=
+if [ "$#" == "0" ]; then
+ARGS=`whoami`
+else
+ARGS="$*"
+fi
+
+docker exec -it ${NAME} su - ${ARGS} -s /bin/bash
+
