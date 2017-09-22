@@ -1,5 +1,10 @@
-FROM phusion/baseimage
+FROM phusion/baseimage:latest
 MAINTAINER Stephen Hellicar <s.hellicar@gmail.com>
+
+#WORKDIR /tmp/
+#ADD ./tmp/ .
+#ADD adddocker.sh .
+#RUN ./adddocker.sh
 
 RUN apt-get update && apt-get install -y \
 	sudo \
@@ -14,10 +19,10 @@ RUN apt-get update && apt-get install -y \
 RUN curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
-
-
 WORKDIR /tmp/
 ADD ./tmp/ .
+ADD adddocker.sh .
+RUN ./adddocker.sh
 ADD replace.sh .
 RUN ./replace.sh
 

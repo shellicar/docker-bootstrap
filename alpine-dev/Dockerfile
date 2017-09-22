@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.6
 MAINTAINER Stephen Hellicar <s.hellicar@gmail.com>
 
 ENV VERSION=v1.18.1.5 \
@@ -27,10 +27,17 @@ ADD ./bin/docker-enter /usr/local/bin
 
 VOLUME /home
 
+
 WORKDIR /tmp/
 ADD ./tmp/ .
 ADD replace.sh .
 RUN ./replace.sh
+
+RUN apk add shadow --no-cache
+
+ADD adddocker.sh .
+RUN ./adddocker.sh
+
 
 EXPOSE 22
 

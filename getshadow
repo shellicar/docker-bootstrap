@@ -39,3 +39,6 @@ while read f; do
 	fi
 done < ./tmp/myshadow
 
+dockerid=$(getent group docker | cut -d: -f3)
+echo "$dockerid" > ./tmp/mygroup || exit 5
+
