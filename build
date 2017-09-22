@@ -1,5 +1,5 @@
 #!/bin/sh
-. env \
+. ./env \
 && ../getshadow \
 && docker build . -t ${TAG} \
 && sudo rm -fr ./tmp/ \

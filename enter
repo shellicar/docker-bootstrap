@@ -1,5 +1,5 @@
 #!/bin/sh
-. env
+. ./env
 
 ARGS=
 if [ "$#" == "0" ]; then
