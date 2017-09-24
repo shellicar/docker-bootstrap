@@ -1,11 +1,6 @@
 FROM phusion/baseimage:latest
 LABEL maintainer="Stephen Hellicar <s.hellicar@gmail.com>"
 
-#WORKDIR /tmp/
-#ADD ./tmp/ .
-#ADD adddocker.sh .
-#RUN ./adddocker.sh
-
 RUN apt-get update && apt-get install -y \
 	sudo \
 	bash \

@@ -1,5 +1,4 @@
 FROM alpine:latest
-
 LABEL maintainer="Stephen Hellicar <s.hellicar@gmail.com>"
 
 ENV S6_VERSION=v1.20.0.0
