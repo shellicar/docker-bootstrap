@@ -3,7 +3,7 @@
 
 ARGS=
 if [ "$#" == "0" ]; then
-ARGS=`whoami`
+ARGS=$(whoami)
 else
 ARGS="$*"
 fi

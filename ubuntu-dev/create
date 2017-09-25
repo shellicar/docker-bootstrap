@@ -2,18 +2,16 @@
 
 . ./env
 
-
-STATE=$(docker inspect --format "{{.State.Running}}" "$NAME" 2>/dev/null)
-
-if [ "$STATE" == "false" ]; then
-    printf "Removing: " && docker rm $NAME || exit 1
-elif [ "$STATE" == "true" ]; then
-    printf "Stopping: " && docker stop $NAME || exit 2
-    printf "Removing: " && docker rm $NAME || exit 3
+./checkstop
+RESULT=$?
+if [ $RESULT -eq 1 ]; then
+    exit 0
+elif [ $RESULT -gt 1 ]; then
+    exit 1
 fi
 
 docker run -d -it \
--e TZ=Australia/Melbourne \
+-e TZ=Australia/Hobart \
 --name ${NAME} \
 -h ${NAME} \
 -p 223:22 \
