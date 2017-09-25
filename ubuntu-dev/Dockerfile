@@ -1,5 +1,5 @@
 FROM phusion/baseimage:latest
-MAINTAINER Stephen Hellicar <s.hellicar@gmail.com>
+LABEL maintainer="Stephen Hellicar <s.hellicar@gmail.com>"
 
 #WORKDIR /tmp/
 #ADD ./tmp/ .

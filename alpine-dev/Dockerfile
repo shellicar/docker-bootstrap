@@ -1,22 +1,31 @@
-FROM alpine:3.6
-MAINTAINER Stephen Hellicar <s.hellicar@gmail.com>
+FROM alpine:latest
 
-ENV VERSION=v1.18.1.5 \
-    URL=https://github.com/just-containers/s6-overlay/releases/download/v1.11.0.1/${VERSION}/s6-overlay-amd64.tar.gz
+LABEL maintainer="Stephen Hellicar <s.hellicar@gmail.com>"
+
+ENV S6_VERSION=v1.20.0.0
+ENV S6_URL="https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz"
+ENV COMPOSE_VERSION=1.16.1
+ENV COMPOSE_URL="https://github.com/docker/compose/release/download/${COMPOSE_VERSION}/docker-compose-Linux-x86_64"
+
+RUN echo S6_URL=${S6_URL} >/dev/stderr
+RUN echo COMPOSE_URL=${COMPOSE_URL} >/dev/stderr
 
 # add s6-overlay
 RUN apk add --no-cache curl \
-&&  curl -sSL ${URL} > /tmp/down.tar.gz \
-&&  curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+&&  curl -sSL ${S6_URL} > /tmp/down.tar.gz \
+&&  curl -L "${COMPOSE_URL}" -o /usr/local/bin/docker-compose \
 &&  chmod +x /usr/local/bin/docker-compose \
 &&  tar xfz /tmp/down.tar.gz -C / \
 &&  apk del -r curl
 
+
+ENV PACKAGES="openssh docker bash sudo vim openssl git less"
+
 # add packages
-RUN apk add openssh docker bash sudo vim openssl --no-cache
+RUN apk add ${PACKAGES} --no-cache
 
 RUN apk add tzdata --no-cache \
-&&  cp /usr/share/zoneinfo/Australia/Melbourne /etc/localtime \
+&&  cp /usr/share/zoneinfo/Australia/Hobart /etc/localtime \
 &&  apk del -r tzdata
 
 # gen keys

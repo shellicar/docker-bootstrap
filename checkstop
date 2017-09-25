@@ -1,0 +1,24 @@
+#!/bin/sh
+
+. ./env
+
+STATE=$(docker inspect --format "{{.State.Running}}" "$NAME" 2>/dev/null)
+
+if [ "$STATE" != "" ]; then
+    ID1=$(docker inspect ${NAME} --format "{{.Image}}")
+    ID2=$(docker inspect ${TAG} --format "{{.ID}}")
+    echo "ID1=$ID1"
+    echo "ID2=$ID2"
+
+    if [ "$ID1" != "$ID2" ]; then
+        if [ "$STATE" == "false" ]; then
+            printf "Removing: " && docker rm $NAME || exit 2
+        elif [ "$STATE" == "true" ]; then
+            printf "Stopping: " && docker stop $NAME || exit 3
+            printf "Removing: " && docker rm $NAME || exit 4
+        fi
+    else
+        exit 1
+    fi
+fi
+
